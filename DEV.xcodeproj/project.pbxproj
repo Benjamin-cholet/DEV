@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		43AD0D8D1E50BD07003C6E37 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 43AD0D8C1E50BD07003C6E37 /* main.c */; };
-		43AD0D941E50BDF2003C6E37 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 43AD0D931E50BDF2003C6E37 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -122,7 +121,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				43AD0D941E50BDF2003C6E37 /* README.md in Sources */,
 				43AD0D8D1E50BD07003C6E37 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
