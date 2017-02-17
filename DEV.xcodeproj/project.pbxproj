@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4356C1631E578816007E3DF3 /* cmd.c in Sources */ = {isa = PBXBuildFile; fileRef = 4356C1611E578816007E3DF3 /* cmd.c */; };
 		4389A5141E56429D00727EAA /* serial.c in Sources */ = {isa = PBXBuildFile; fileRef = 4389A5121E56429D00727EAA /* serial.c */; };
 		43AD0D8D1E50BD07003C6E37 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 43AD0D8C1E50BD07003C6E37 /* main.c */; };
 /* End PBXBuildFile section */
@@ -24,6 +25,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4356C1611E578816007E3DF3 /* cmd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cmd.c; sourceTree = "<group>"; };
+		4356C1621E578816007E3DF3 /* cmd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cmd.h; sourceTree = "<group>"; };
 		4389A5121E56429D00727EAA /* serial.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = serial.c; sourceTree = "<group>"; };
 		4389A5131E56429D00727EAA /* serial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = serial.h; sourceTree = "<group>"; };
 		4389A5151E56449700727EAA /* main.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
@@ -63,6 +66,8 @@
 		43AD0D8B1E50BD07003C6E37 /* DEV */ = {
 			isa = PBXGroup;
 			children = (
+				4356C1621E578816007E3DF3 /* cmd.h */,
+				4356C1611E578816007E3DF3 /* cmd.c */,
 				4389A5151E56449700727EAA /* main.h */,
 				43AD0D8C1E50BD07003C6E37 /* main.c */,
 				4389A5131E56429D00727EAA /* serial.h */,
@@ -128,6 +133,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4356C1631E578816007E3DF3 /* cmd.c in Sources */,
 				43AD0D8D1E50BD07003C6E37 /* main.c in Sources */,
 				4389A5141E56429D00727EAA /* serial.c in Sources */,
 			);

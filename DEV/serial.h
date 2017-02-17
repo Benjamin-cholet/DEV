@@ -12,7 +12,7 @@
 static const char *portName = "/dev/cu.usbserial";
 
 void serial_init(int *fd);
-void serial_write(int *fd, unsigned char *msg);
-void serial_read(int *fd, unsigned char **msg, int *length);
+void serial_write(int fd, unsigned char *msg);
+void serial_read(int fd, unsigned char **msg, int *length);
 
 #endif /* serial_h */

@@ -15,7 +15,4 @@
 #define PRINTD(...) ((void)0)
 #endif
 
-
-
-
 #endif /* main_h */

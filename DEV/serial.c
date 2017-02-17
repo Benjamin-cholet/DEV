@@ -25,7 +25,7 @@ void serial_init(int *fd)
     
     PRINTD("init...\n");
     
-    *fd = open(portName, 0x20006, 0x5);
+    *fd = open(portName, O_NONBLOCK | O_RDWR | O_NOCTTY /*0x20006, 0x5*/);
     if (fd < 0) {
         printf("error %d openning %s : %s", errno, portName, strerror(errno));
         exit(EXIT_FAILURE);
@@ -60,7 +60,7 @@ void serial_init(int *fd)
     }
 }
 
-void serial_write(int *fd, unsigned char *msg)
+void serial_write(int fd, unsigned char *msg)
 {
     PRINTD("writing...\n");
     
@@ -68,7 +68,7 @@ void serial_write(int *fd, unsigned char *msg)
     long ret;
     
     do {
-        ret = write(*fd, msg, length);
+        ret = write(fd, msg, length);
         
         if (ret == -1) {
             printf("error writing %d : %s", errno, strerror(errno));
@@ -80,33 +80,32 @@ void serial_write(int *fd, unsigned char *msg)
     } while (length > 0);
 }
 
-void serial_read(int *fd, unsigned char **msg, int *length)
+void serial_read(int fd, unsigned char **msg, int *length)
 {
-    *msg = malloc(27 * sizeof(unsigned char));
-
     struct timeval tv;
     fd_set set;
-    __DARWIN_FD_ZERO(&set);
-    __DARWIN_FD_SET(*fd, &set);
+    FD_ZERO(&set);
+    FD_SET(fd, &set);
     tv.tv_sec = 500;
     tv.tv_usec = 100;
-
     int statut = 0;
-    unsigned char header[2];
     
-    PRINTD("reading\n");
+    *msg = malloc(5 * sizeof(unsigned char));
+    *length = 5;
+    int i = 5;
+    int exited_header=0;
+
+    PRINTD("reading...\n");
     
-    int ret = select(*fd+1, &set, NULL, NULL, &tv);
+    int ret = select(fd+1, &set, NULL, NULL, &tv);
 
     if (ret < 0) {
         printf("error select : %d %s", errno, strerror(errno));
         exit(EXIT_FAILURE);
     }
     
-    int header_read = 0;
-    
     do {
-        ret = (int)read(*fd, header, 2-header_read);
+        ret = (int)read(fd,*msg, (ssize_t)i);
 
         if (ret < 0) {
             printf("error reading : %d %s", errno, strerror(errno));
@@ -114,53 +113,28 @@ void serial_read(int *fd, unsigned char **msg, int *length)
         }
 
         if (ret == 0) {
-            printf("nothing read\n");
+            //printf("nothing read\n");
             //exit(EXIT_FAILURE);
-            ret = ioctl(*fd, TIOCMGET, &statut);
+            ret = ioctl(fd, TIOCMGET, &statut);
             if (ret == -1) {
                 printf("%d, %s\n", errno, strerror(errno));
                 exit(EXIT_FAILURE);
             }
         }
-
-        printf("read sucess : %d\n", ret);
-
-        header_read -= ret;
-        
-    }
-    while (header_read >0);
-    
-    *length = (5 + header[1] + 2);
-    
-   // *msg = malloc(27 * sizeof(unsigned char));
-    *msg[0] = header[0];
-    *msg[1] = header[1];
-    
-    int i=*length - 2;
-    
-    do {
-        ret = (int)read(*fd, msg, i);
-        
-        if (ret < 0) {
-            printf("error reading : %d %s", errno, strerror(errno));
-            exit(EXIT_FAILURE);
-        }
-        
-        if (ret == 0) {
-            printf("nothing read\n");
-            //exit(EXIT_FAILURE);
-            ret = ioctl(*fd, TIOCMGET, &statut);
-            if (ret == -1) {
-                printf("%d, %s\n", errno, strerror(errno));
-                exit(EXIT_FAILURE);
-            }
-        }
-        
-        printf("read sucess : %d\n", ret);
         
         i -= ret;
-        msg += ret;
+        *msg += ret;
         
+        if (i==0 && !exited_header) {
+            *length += *(*msg - 4) + 2; //add data + CRC
+            i += *(*msg - 4) + 2;
+            exited_header = 1;
+            *msg -= 5;
+            *msg = realloc(*msg, *length);
+            *msg += 5;
+        }
     }
-    while (i >0);
+    while (i > 0);
+    
+    *msg -= *length;
 }
