@@ -7,7 +7,9 @@
 //
 
 #include "cmd.h"
+#include "serial.h"
 
+#include <stdlib.h>
 #include <sys/types.h>
 
 void CRC16_CCITT(uint16_t *crcReg, unsigned char data)
@@ -48,4 +50,37 @@ int checkCRC(unsigned char *msg, int lenth)
         return 1;
     
     return 0;
+}
+
+void buildPacket(unsigned char **msg, unsigned char dataLength, M5eCmd op_code, unsigned char *data)
+{
+    *msg = malloc((4+dataLength) * sizeof(unsigned char));
+    
+    **msg = 0xFF;
+    *(*msg+1) = dataLength;
+    *(*msg+2) = op_code;
+    for (int i=3; i<dataLength+3; i++)
+    {
+        *(*msg+i) = *(data+i-3);
+    }
+    
+    uint16_t crcReg = 0xFFFF;
+    for (int i=1; i<dataLength+3; i++)
+        CRC16_CCITT(&crcReg, *(*msg+i));
+    
+    *(*msg + dataLength+3) = crcReg / 0x100;
+    *(*msg + dataLength+4) = crcReg % 0x100;
+}
+
+void M5e_init(int fd)
+{
+    unsigned char *message = NULL;
+    buildPacket(&message, 0, bootFirmware, 0);
+    serial_write(fd, message);
+    unsigned char *buf = NULL;
+    int a;
+    serial_read(fd, &buf, &a);
+    if (buf[1] != 0) {
+        printf("failed to boot firmware\n");
+    }
 }

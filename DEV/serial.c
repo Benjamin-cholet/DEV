@@ -64,6 +64,10 @@ void serial_write(int fd, unsigned char *msg)
 {
     PRINTD("writing...\n");
     
+    for (int i=0; i<25; i++) {
+        printf("%x ", msg[i]);
+    }
+    
     int length = 5 + (int)msg[1]; //cf protocol : header (1) + dataLength (1) + command (1) + data (n) + CRC (2)
     long ret;
     
@@ -93,7 +97,7 @@ void serial_read(int fd, unsigned char **msg, int *length)
     *msg = malloc(5 * sizeof(unsigned char));
     *length = 5;
     int i = 5;
-    int exited_header=0;
+    int exited_header = 0;
 
     PRINTD("reading...\n");
     
