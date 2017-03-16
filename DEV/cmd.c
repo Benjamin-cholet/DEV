@@ -84,3 +84,15 @@ void M5e_init(int fd)
         printf("failed to boot firmware\n");
     }
 }
+
+void M5e_strerror(uint16_t a){
+    switch (a) {
+        case 0x101:
+            printf("FAULT_INVALID_OPCODE");
+            break;
+            
+        default:
+            printf("unreferenced error");
+            break;
+    }
+}

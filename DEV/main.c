@@ -21,26 +21,20 @@ int main(int argc, const char * argv[]) {
     
     unsigned char *message = NULL;
     
-    unsigned char data[20] = {0x03, 0xE8, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x20, 0x10, 0x12, 0x34};
-    //unsigned char data[1] = {0x02};
-
-
-    buildPacket(&message, 20, readTagData, data);
+   // unsigned char data[20] = {0x03, 0xE8, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x20, 0x10, 0x12, 0x34};
     
+   // unsigned char data [10] = {0x03, 0xE8, 0x03, 0x00, 0x00, 0x00, 0x20, 0x10, 0x12, 0x34};
+
+//    buildPacket(&message, 0, bootFirmware, NULL);
+//    
+//    serial_write(fd, message);
+//
+//    serial_read_to_stdout(fd);
+    
+    unsigned char data[1] = {0x08};
+    buildPacket(&message, 1, 0x97, data);
     serial_write(fd, message);
-    
-    unsigned char *buf = NULL;
-    
-    int a;
-    
-    
-    serial_read(fd, &buf, &a);
-    
-    for (int i=0; i<a; i++) {
-        printf("%X ", buf[i]);
-    }
-
-    printf("\n%s\n", checkCRC(buf, a) ? "CRC ok " : "CRC false");
+    serial_read_to_stdout(fd);
     
     
 //    unsigned char *message=NULL;

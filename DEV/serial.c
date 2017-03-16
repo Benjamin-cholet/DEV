@@ -8,6 +8,7 @@
 
 #include "serial.h"
 #include "main.h"
+#include "cmd.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -26,12 +27,10 @@ void serial_init(int *fd)
     PRINTD("init...\n");
     
     *fd = open(portName, O_NONBLOCK | O_RDWR | O_NOCTTY /*0x20006, 0x5*/);
-    if (fd < 0) {
-        printf("error %d openning %s : %s", errno, portName, strerror(errno));
+    if (*fd < 0) {
+        printf("error %d openning %s : %s\n", errno, portName, strerror(errno));
         exit(EXIT_FAILURE);
     }
-    
-    PRINTD("port openned\n");
     
     ret = tcgetattr(*fd, &tty);
     
@@ -64,9 +63,6 @@ void serial_write(int fd, unsigned char *msg)
 {
     PRINTD("writing...\n");
     
-    for (int i=0; i<25; i++) {
-        printf("%x ", msg[i]);
-    }
     
     int length = 5 + (int)msg[1]; //cf protocol : header (1) + dataLength (1) + command (1) + data (n) + CRC (2)
     long ret;
@@ -141,4 +137,28 @@ void serial_read(int fd, unsigned char **msg, int *length)
     while (i > 0);
     
     *msg -= *length;
+}
+
+void serial_read_to_stdout(int fd)
+{
+    unsigned char *buf = NULL;
+    int a;
+    
+    serial_read(fd, &buf, &a);
+    
+    printf("command 0x%.2X ended with code : 0x%X%X ", buf[2], buf[3], buf[4]);
+    
+    if (buf[3]*0x100 + buf[4]) {
+        M5e_strerror(buf[3]*0x100 + buf[4]);
+    }
+    
+    if (buf[1]!=0) {
+        printf("\ndata :");
+        for (int i=2; i<(2+buf[1]); i++) {
+            printf("%.2X ", buf[i]);
+        }
+    }
+    
+    printf("\n%s\n", checkCRC(buf, a) ? "CRC is ok " : "CRC is false");
+
 }

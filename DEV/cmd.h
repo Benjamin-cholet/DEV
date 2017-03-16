@@ -19,5 +19,7 @@ void CRC16_CCITT(uint16_t *crcReg, unsigned char data);
 int checkCRC(unsigned char *msg, int lenth);
 void buildPacket(unsigned char **msg, unsigned char dataLength, M5eCmd op_code, unsigned char *data);
 void M5e_init(int fd);
+void M5e_strerror(uint16_t a);
+
 
 #endif /* cmd_h */
