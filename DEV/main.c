@@ -45,7 +45,7 @@ int main(int argc, const char * argv[]) {
 //    serial_write(fd, message);
 //    serial_read_to_stdout(fd);
     
-    unsigned char data[2] = {0x03, 0xE8};
+    unsigned char data[2] = {0x27, 0x10}; //timeout (ms)
     buildPacket(&message, 2, readTagSingle, data);
     serial_write(fd, message);
     serial_read_to_stdout(fd);
