@@ -16,35 +16,41 @@
 int main(int argc, const char * argv[]) {
     
     int fd;
-    serial_init(&fd);
+    serial_init(&fd); //establish connection
     
     
     unsigned char *message = NULL;
     
-   // unsigned char data[20] = {0x03, 0xE8, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00,0x00, 0x00, 0x00, 0x20, 0x10, 0x12, 0x34};
-    
-   // unsigned char data [10] = {0x03, 0xE8, 0x03, 0x00, 0x00, 0x00, 0x20, 0x10, 0x12, 0x34};
-
-//    buildPacket(&message, 0, bootFirmware, NULL);
-//    
+//    buildPacket(&message, 0, bootFirmware, NULL); //start bootloader
 //    serial_write(fd, message);
-//
 //    serial_read_to_stdout(fd);
     
-    unsigned char data[1] = {0x08};
-    buildPacket(&message, 1, 0x97, data);
+//    unsigned char data[1] = {0x08}; //EU3
+//    buildPacket(&message, 1, setCurrentRegion, data);
+//    serial_write(fd, message);
+//    serial_read_to_stdout(fd);
+    
+//    unsigned char data[2] = {0x00, 0x05}; //Gen2
+//    buildPacket(&message, 2, setCurrentTagProtocol, data);
+//    serial_write(fd, message);
+//    serial_read_to_stdout(fd);
+    
+//    unsigned char data[2] = {0x09, 0xC4}; //25.0dBm
+//    buildPacket(&message, 2, setReadTXPower, data);
+//    serial_write(fd, message);
+//    serial_read_to_stdout(fd);
+
+//    unsigned char data[2] = {0x01, 0x01}; //TX,RX on port1
+//    buildPacket(&message, 2, setAntennaPort, data);
+//    serial_write(fd, message);
+//    serial_read_to_stdout(fd);
+    
+    unsigned char data[2] = {0x03, 0xE8};
+    buildPacket(&message, 2, readTagSingle, data);
     serial_write(fd, message);
     serial_read_to_stdout(fd);
     
     
-//    unsigned char *message=NULL;
-//    unsigned char data[3] = {5,6,7};
-//    
-//    buildPacket(&message, 3, firmwareVersion, data);
-//    
-//    for (int i =0; i<8; i++) {
-//        printf("%x ", message[i]);
-//    }
-//    
+
     return 0;
 }

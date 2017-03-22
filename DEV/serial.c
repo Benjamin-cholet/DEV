@@ -146,7 +146,7 @@ void serial_read_to_stdout(int fd)
     
     serial_read(fd, &buf, &a);
     
-    printf("command 0x%.2X ended with code : 0x%X%X ", buf[2], buf[3], buf[4]);
+    printf("command 0x%.2X ended with code : 0x%.2X%.2X ", buf[2], buf[3], buf[4]);
     
     if (buf[3]*0x100 + buf[4]) {
         M5e_strerror(buf[3]*0x100 + buf[4]);

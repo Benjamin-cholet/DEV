@@ -72,25 +72,17 @@ void buildPacket(unsigned char **msg, unsigned char dataLength, M5eCmd op_code, 
     *(*msg + dataLength+4) = crcReg % 0x100;
 }
 
-void M5e_init(int fd)
-{
-    unsigned char *message = NULL;
-    buildPacket(&message, 0, bootFirmware, 0);
-    serial_write(fd, message);
-    unsigned char *buf = NULL;
-    int a;
-    serial_read(fd, &buf, &a);
-    if (buf[1] != 0) {
-        printf("failed to boot firmware\n");
-    }
-}
-
 void M5e_strerror(uint16_t a){
     switch (a) {
         case 0x101:
             printf("FAULT_INVALID_OPCODE");
             break;
-            
+        case 0x400:
+            printf("FAULT_NO_TAGS_FOUND");
+            break;
+        case 0x402:
+            printf("FAULT_INVALID_PROTOCOL_SPECIFIED");
+            break;
         default:
             printf("unreferenced error");
             break;
