@@ -15,4 +15,6 @@
 #define PRINTD(...) ((void)0)
 #endif
 
+void init(int fd);
+
 #endif /* main_h */

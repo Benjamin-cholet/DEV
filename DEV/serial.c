@@ -24,9 +24,9 @@ void serial_init(int *fd)
     struct termios tty;
     int ret;
     
-    PRINTD("init...\n");
+//    PRINTD("init...\n");
     
-    *fd = open(portName, O_NONBLOCK | O_RDWR | O_NOCTTY /*0x20006, 0x5*/);
+    *fd = open(portName, /*O_NONBLOCK |*/ O_RDWR | O_NOCTTY /*0x20006, 0x5*/);
     if (*fd < 0) {
         printf("error %d openning %s : %s\n", errno, portName, strerror(errno));
         exit(EXIT_FAILURE);
@@ -61,7 +61,7 @@ void serial_init(int *fd)
 
 void serial_write(int fd, unsigned char *msg)
 {
-    PRINTD("writing...\n");
+//    PRINTD("writing...\n");
     
     
     int length = 5 + (int)msg[1]; //cf protocol : header (1) + dataLength (1) + command (1) + data (n) + CRC (2)
@@ -86,8 +86,8 @@ void serial_read(int fd, unsigned char **msg, int *length)
     fd_set set;
     FD_ZERO(&set);
     FD_SET(fd, &set);
-    tv.tv_sec = 500;
-    tv.tv_usec = 100;
+    tv.tv_sec = 5;
+    tv.tv_usec = 0;
     int statut = 0;
     
     *msg = malloc(5 * sizeof(unsigned char));
@@ -95,7 +95,7 @@ void serial_read(int fd, unsigned char **msg, int *length)
     int i = 5;
     int exited_header = 0;
 
-    PRINTD("reading...\n");
+//    PRINTD("reading...\n");
     
     int ret = select(fd+1, &set, NULL, NULL, &tv);
 
@@ -103,7 +103,6 @@ void serial_read(int fd, unsigned char **msg, int *length)
         printf("error select : %d %s", errno, strerror(errno));
         exit(EXIT_FAILURE);
     }
-    
     do {
         ret = (int)read(fd,*msg, (ssize_t)i);
 
@@ -154,11 +153,11 @@ void serial_read_to_stdout(int fd)
     
     if (buf[1]!=0) {
         printf("\ndata :");
-        for (int i=2; i<(2+buf[1]); i++) {
+        for (int i=5; i<(5+buf[1]); i++) {
             printf("%.2X ", buf[i]);
         }
     }
     
-    printf("\n%s\n", checkCRC(buf, a) ? "CRC is ok " : "CRC is false");
+    printf("\n%s\n", checkCRC(buf, a) ? "" : "CRC is false");
 
 }

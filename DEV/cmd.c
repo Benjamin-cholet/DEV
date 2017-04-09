@@ -11,6 +11,8 @@
 
 #include <stdlib.h>
 #include <sys/types.h>
+#include <inttypes.h>
+
 
 void CRC16_CCITT(uint16_t *crcReg, unsigned char data)
 {
@@ -82,6 +84,9 @@ void M5e_strerror(uint16_t a){
             break;
         case 0x402:
             printf("FAULT_INVALID_PROTOCOL_SPECIFIED");
+            break;
+        case 0x600:
+            printf("FAULT_TAG_ID_BUFFER_NOT_ENOUGH_TAGS_AVAILABLE");
             break;
         default:
             printf("unreferenced error");

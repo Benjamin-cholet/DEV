@@ -18,39 +18,46 @@ int main(int argc, const char * argv[]) {
     int fd;
     serial_init(&fd); //establish connection
     
-    
+    init(fd);
+
     unsigned char *message = NULL;
     
-//    buildPacket(&message, 0, bootFirmware, NULL); //start bootloader
-//    serial_write(fd, message);
-//    serial_read_to_stdout(fd);
     
-//    unsigned char data[1] = {0x08}; //EU3
-//    buildPacket(&message, 1, setCurrentRegion, data);
-//    serial_write(fd, message);
-//    serial_read_to_stdout(fd);
-    
-//    unsigned char data[2] = {0x00, 0x05}; //Gen2
-//    buildPacket(&message, 2, setCurrentTagProtocol, data);
-//    serial_write(fd, message);
-//    serial_read_to_stdout(fd);
-    
-//    unsigned char data[2] = {0x09, 0xC4}; //25.0dBm
-//    buildPacket(&message, 2, setReadTXPower, data);
-//    serial_write(fd, message);
-//    serial_read_to_stdout(fd);
+    buildPacket(&message, 4, readTagMultiple, (unsigned char []){0x00, 0x03, 0x07, 0x10}); //Timeout (ms)
+    serial_write(fd, message);
+    serial_read_to_stdout(fd);
+//
+    buildPacket(&message, 3, getTagBuffer, (unsigned char []){0x00, 0x03, 0x00});
+    serial_write(fd, message);
+    serial_read_to_stdout(fd);
 
-//    unsigned char data[2] = {0x01, 0x01}; //TX,RX on port1
-//    buildPacket(&message, 2, setAntennaPort, data);
-//    serial_write(fd, message);
-//    serial_read_to_stdout(fd);
     
-    unsigned char data[2] = {0x27, 0x10}; //timeout (ms)
-    buildPacket(&message, 2, readTagSingle, data);
+    
+    
+    return 0;
+}
+
+void init(int fd)
+{
+    unsigned char *message = NULL;
+    
+    buildPacket(&message, 0, bootFirmware, NULL); //start bootloader
     serial_write(fd, message);
     serial_read_to_stdout(fd);
     
+    buildPacket(&message, 1, setCurrentRegion, (unsigned char []){0x08}); //EU3
+    serial_write(fd, message);
+    serial_read_to_stdout(fd);
     
-
-    return 0;
+    buildPacket(&message, 2, setCurrentTagProtocol, (unsigned char []){0x00, 0x05}); //Gen2
+    serial_write(fd, message);
+    serial_read_to_stdout(fd);
+    
+    buildPacket(&message, 2, setReadTXPower, (unsigned char []){0x09, 0xC4}); //25.0dBm
+    serial_write(fd, message);
+    serial_read_to_stdout(fd);
+    
+    buildPacket(&message, 3, setAntennaPort, (unsigned char []){0x02, 0x01, 0x02}); //TX,RX ports
+    serial_write(fd, message);
+    serial_read_to_stdout(fd);
 }
