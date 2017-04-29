@@ -22,9 +22,17 @@ getHardwareVersion = 0x10, getAntennaConfiguration = 0x61, getReadTXPower = 0x62
 void CRC16_CCITT(uint16_t *crcReg, unsigned char data);
 int checkCRC(unsigned char *msg, int lenth);
 void buildPacket(unsigned char **msg, unsigned char dataLength, M5eCmd op_code, unsigned char *data);
-void M5e_init(int fd);
 void M5e_strerror(uint16_t a);
+void readBuffer(int fd);
+void clearTagBuf();
+void tagBufDisp();
 
+#define MAXTAG 10
 
+extern struct tag {
+    unsigned char EPC[16];
+    unsigned char RSSI_11;
+    unsigned char RSSI_12;
+} tagBuf[MAXTAG];
 
 #endif /* cmd_h */

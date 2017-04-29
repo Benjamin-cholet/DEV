@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
+
 int main(int argc, const char * argv[]) {
     
     int fd;
@@ -22,17 +24,11 @@ int main(int argc, const char * argv[]) {
 
     unsigned char *message = NULL;
     
-    
-    buildPacket(&message, 4, readTagMultiple, (unsigned char []){0x00, 0x03, 0x07, 0x10}); //Timeout (ms)
-    serial_write(fd, message);
-    serial_read_to_stdout(fd);
-//
-    buildPacket(&message, 3, getTagBuffer, (unsigned char []){0x00, 0x03, 0x00});
+    buildPacket(&message, 4, readTagMultiple, (unsigned char []){0x00, 0x03, 0x00, 0xE8}); //Timeout (ms)
     serial_write(fd, message);
     serial_read_to_stdout(fd);
 
-    
-    
+    readBuffer(fd);
     
     return 0;
 }
@@ -57,7 +53,7 @@ void init(int fd)
     serial_write(fd, message);
     serial_read_to_stdout(fd);
     
-    buildPacket(&message, 3, setAntennaPort, (unsigned char []){0x02, 0x01, 0x02}); //TX,RX ports
+    buildPacket(&message, 5, setAntennaPort, (unsigned char []){0x02, 0x01, 0x01, 0x01, 0x02}); //altern monostatic - bistatic.
     serial_write(fd, message);
     serial_read_to_stdout(fd);
 }

@@ -12,7 +12,9 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <inttypes.h>
+#include <string.h>
 
+struct tag tagBuf[MAXTAG];
 
 void CRC16_CCITT(uint16_t *crcReg, unsigned char data)
 {
@@ -92,4 +94,65 @@ void M5e_strerror(uint16_t a){
             printf("unreferenced error");
             break;
     }
+}
+
+void clearTagBuf()
+{
+    for (int i=0; i<MAXTAG; i++) {
+        memset(tagBuf[i].EPC, 0x00, 16);
+        tagBuf[i].RSSI_11=0;
+        tagBuf[i].RSSI_12=0;
+    }
+}
+
+void tagBufDisp()
+{
+    int i=0;
+    while (i<MAXTAG && tagBuf[i].EPC[0] != '\0') {
+        printf("tag #");
+        for (int j=0; j<16; j++) {
+            printf("%.2X", tagBuf[i].EPC[j]);
+        }
+        printf(" RSSI11 : %d RSSI12 : %d \n", tagBuf[i].RSSI_11, tagBuf[i].RSSI_12);
+        i++;
+    }
+}
+
+void readBuffer(int fd)
+{
+    clearTagBuf();
+    unsigned char *message = NULL;
+    int a;
+    
+    buildPacket(&message, 3, getTagBuffer, (unsigned char []){0x00, 0x06, 0x00}); //Timeout (ms)
+    serial_write(fd, message);
+    serial_read(fd, &message, &a);
+    
+    int tag_count = message[8];
+    
+    for (int i=0; i < tag_count; i++) {
+        unsigned char EPC[16];
+        memcpy(EPC, &message[13+i*20],16);
+        
+        int j=0;
+        while (j<MAXTAG) {
+            if (tagBuf[j].EPC[0] == 0x00) {
+                memcpy(tagBuf[j].EPC, EPC ,16);
+                break;
+            }
+            if (memcmp(EPC, tagBuf[j].EPC, 16) == 0) {
+                break;
+            }
+            j++;
+        }
+        
+        if (message[i*20+10] == 0x11) {
+            tagBuf[j].RSSI_11 = message[i*20+9];
+        }
+        else if (message[i*20+10] == 0x12) {
+            tagBuf[j].RSSI_12 = message[i*20+9];
+        }
+        
+    }
+    tagBufDisp();
 }
