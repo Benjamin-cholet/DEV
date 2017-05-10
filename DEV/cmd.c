@@ -124,7 +124,7 @@ void readBuffer(int fd)
     unsigned char *message = NULL;
     int a;
     
-    buildPacket(&message, 3, getTagBuffer, (unsigned char []){0x00, 0x06, 0x00}); //Timeout (ms)
+    buildPacket(&message, 3, getTagBuffer, (unsigned char []){0x00, 0x06, 0x00});
     serial_write(fd, message);
     serial_read(fd, &message, &a);
     

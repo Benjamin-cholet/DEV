@@ -24,7 +24,7 @@ int main(int argc, const char * argv[]) {
 
     unsigned char *message = NULL;
     
-    buildPacket(&message, 4, readTagMultiple, (unsigned char []){0x00, 0x03, 0x00, 0xE8}); //Timeout (ms)
+    buildPacket(&message, 4, readTagMultiple, (unsigned char []){0x00, 0x03, 0x03, 0xE8}); //Timeout (ms)
     serial_write(fd, message);
     serial_read_to_stdout(fd);
 

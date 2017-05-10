@@ -19,12 +19,12 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
+static const char *portName = "/dev/cu.usbserial";
+
 void serial_init(int *fd)
 {
     struct termios tty;
     int ret;
-    
-//    PRINTD("init...\n");
     
     *fd = open(portName, /*O_NONBLOCK |*/ O_RDWR | O_NOCTTY /*0x20006, 0x5*/);
     if (*fd < 0) {
@@ -61,9 +61,6 @@ void serial_init(int *fd)
 
 void serial_write(int fd, unsigned char *msg)
 {
-//    PRINTD("writing...\n");
-    
-    
     int length = 5 + (int)msg[1]; //cf protocol : header (1) + dataLength (1) + command (1) + data (n) + CRC (2)
     long ret;
     
@@ -94,8 +91,6 @@ void serial_read(int fd, unsigned char **msg, int *length)
     *length = 5;
     int i = 5;
     int exited_header = 0;
-
-//    PRINTD("reading...\n");
     
     int ret = select(fd+1, &set, NULL, NULL, &tv);
 
