@@ -10,3 +10,4 @@
 #                   $gcc *.c -o a.out
 #                   $./a.out
 
+#voie somme à brancher sur le port Ant 1, voie diff sur le port Ant 2.

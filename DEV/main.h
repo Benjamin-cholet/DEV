@@ -9,12 +9,6 @@
 #ifndef main_h
 #define main_h
 
-#ifdef DEBUG
-#define PRINTD printf
-#else
-#define PRINTD(...) ((void)0)
-#endif
-
 void init(int fd);
 
 #endif /* main_h */

@@ -81,6 +81,9 @@ void M5e_strerror(uint16_t a){
         case 0x101:
             printf("FAULT_INVALID_OPCODE");
             break;
+        case 0x105:
+            printf("FAULT_MSG_INVALID_PARAMETER_VALUE");
+            break;
         case 0x400:
             printf("FAULT_NO_TAGS_FOUND");
             break;
@@ -113,7 +116,7 @@ void tagBufDisp()
         for (int j=0; j<16; j++) {
             printf("%.2X", tagBuf[i].EPC[j]);
         }
-        printf(" RSSI11 : %d RSSI12 : %d \n", tagBuf[i].RSSI_11, tagBuf[i].RSSI_12);
+        printf(" RSSI11 : %d RSSI12 : %d ∑/∆ = %f\n", tagBuf[i].RSSI_11, tagBuf[i].RSSI_12, (float)tagBuf[i].RSSI_11/tagBuf[i].RSSI_12);
         i++;
     }
 }
