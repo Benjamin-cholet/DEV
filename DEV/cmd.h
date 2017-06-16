@@ -3,7 +3,6 @@
 //  DEV
 //
 //  Created by Benjamin on 17/02/2017.
-//  Copyright © 2017 Benjamin. All rights reserved.
 //
 
 #ifndef cmd_h
