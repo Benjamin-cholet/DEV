@@ -2,8 +2,7 @@
 //  main.c
 //  DEV
 //
-//  Created by Benjamin on 12/02/2017.
-//  Copyright © 2017 Benjamin. All rights reserved.
+//  Created by Benjamin CHOLET on 12/02/2017.
 //
 
 #include "main.h"
@@ -54,5 +53,4 @@ void init(int fd)
     buildPacket(&message, 5, setAntennaPort, (unsigned char []){0x02, 0x01, 0x01, 0x01, 0x02}); //altern monostatic - bistatic.
     serial_write(fd, message);
     serial_read_to_stdout(fd);
-
 }

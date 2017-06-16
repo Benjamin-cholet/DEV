@@ -2,8 +2,7 @@
 //  cmd.c
 //  DEV
 //
-//  Created by Benjamin on 17/02/2017.
-//  Copyright © 2017 Benjamin. All rights reserved.
+//  Created by Benjamin CHOLET on 17/02/2017.
 //
 
 #include "cmd.h"
@@ -94,7 +93,7 @@ void M5e_strerror(uint16_t a){
             printf("FAULT_TAG_ID_BUFFER_NOT_ENOUGH_TAGS_AVAILABLE");
             break;
         default:
-            printf("unreferenced error");
+            printf("unreferenced error, cf doc");
             break;
     }
 }
@@ -116,7 +115,7 @@ void tagBufDisp()
         for (int j=0; j<16; j++) {
             printf("%.2X", tagBuf[i].EPC[j]);
         }
-        printf(" RSSI11 : %d RSSI12 : %d ∑/∆ = %f\n", tagBuf[i].RSSI_11, tagBuf[i].RSSI_12, (float)tagBuf[i].RSSI_11/tagBuf[i].RSSI_12);
+        printf(" RSSI11 : %d RSSI12 : %d ∆/∑ = %f\n", tagBuf[i].RSSI_11, tagBuf[i].RSSI_12, (float)tagBuf[i].RSSI_12/tagBuf[i].RSSI_11);
         i++;
     }
 }
